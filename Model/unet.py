@@ -43,4 +43,7 @@ def upsampling(x,block_name,uprate=2,outshape=None,method='bicubic'):
 
 
 
-class unet(object)
+class unet(object):
+    def __init__(self):
+        pass
+    #TODO
