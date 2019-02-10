@@ -7,3 +7,10 @@ class o1(object):
 
 m=o1(1)(4)
 print m
+
+def generator():
+    for i in range(1000):
+        yield i*i
+a=generator()
+for k in range(10):
+    print next(a)

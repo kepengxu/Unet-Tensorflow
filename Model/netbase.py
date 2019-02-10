@@ -17,16 +17,16 @@ from tensorflow.python.layers.convolutional import separable_conv2d
 
 
 class net(object):
-    def __init__(self):
+    def __init__(self,common_params, net_params):
         trainable_collection=[]
     def loss(self):
 
         raise NotImplementedError
-    def inference(self):
+    def inference(self,Images):
 
         raise NotImplementedError
 
-    def upsampling(x, block_name, uprate=2, outshape=None, method='bicubic'):
+    def upsampling(self,x, block_name, uprate=2, outshape=None, method='bicubic'):
         '''
 
         :param block_name: The name of operation
@@ -47,13 +47,13 @@ class net(object):
                 x = methods[method](x, size=outshape, align_corners=True, name=block_name)
                 return x
 
-    def maxpool(x, block_name, poolsize=2, stride=2):
+    def maxpool(self,x, block_name, poolsize=2, stride=2):
         with tf.name_scope(block_name):
             x = max_pool2d(x, pool_size=(poolsize, poolsize), strides=(stride, stride), padding='same',
                            name=block_name + 'pooling')
             return x
 
-    def deconv_bn(x, feature_channel, kernel_size, block_name, stride=(1, 1), padding='same', dilation_rate=(1, 1),
+    def deconv_bn(self,x, feature_channel, block_name, kernel_size=3, stride=(1, 1), padding='same', dilation_rate=(1, 1),
                   activation=None):
         with tf.name_scope(block_name):
             x = deconv2d(x, feature_channel, kernel_size, stride=stride, padding=padding, dilation_rate=dilation_rate,
@@ -61,8 +61,8 @@ class net(object):
             x = batch_normalization(x, name=block_name + 'bn')
             return x
 
-    def conv_bn(x, feature_channel, kernel_size, block_name, stride=(1, 1), padding='same', dilation_rate=(1, 1),
-                activation=None):
+    def conv_bn(self,x, feature_channel, block_name, kernel_size=3, stride=(1, 1), padding='same', dilation_rate=(1, 1),
+                activation='relu'):
         with tf.name_scope(block_name):
             x = conv2d(x, feature_channel, kernel_size, stride=stride, padding=padding, dilation_rate=dilation_rate,
                        activation=activation, name=block_name + 'conv')
@@ -85,3 +85,4 @@ class net(object):
         bool_mask = (x > 0)
         mask = tf.cast(bool_mask, dtype=dtype)
         return 1.0 * mask * x + alpha * (1 - mask) * x
+
